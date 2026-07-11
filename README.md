@@ -151,8 +151,6 @@ Out of the box it carries the Tested Media logo. Set `BRAND_NAME` (and optionall
 **Why not just use rank tracker X?**
 If you're happy paying monthly SaaS pricing, do that. This is for people who want the whole stack, their own data, and a bill that rounds to a coffee.
 
-> DataForSEO links in this README are affiliate links — signing up through them supports the project at no cost to you. Plain link if you prefer: dataforseo.com
-
 ## Contributing
 
 PRs welcome. The codebase is intentionally boring: stdlib Python, one file per report, no build step. Add a report = one script that writes JSON + HTML, one nav entry.
