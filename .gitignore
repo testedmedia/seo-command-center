@@ -1,0 +1,10 @@
+.env
+credentials/
+data/*
+!data/.gitkeep
+site/*.html
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.wrangler/
