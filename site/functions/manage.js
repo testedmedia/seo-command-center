@@ -54,6 +54,8 @@ export async function onRequestPost(context) {
 
   const id = "mgmt:" + Date.now() + ":" + Math.random().toString(36).slice(2, 8);
   await context.env.REFRESH_KV.put(id, JSON.stringify(body), { expirationTtl: 604800 });
+  // dirty flag lets the worker skip the KV list call (1,000/day free-tier cap)
+  await context.env.REFRESH_KV.put("mgmt-dirty", "1", { expirationTtl: 604800 });
   return json({ ok: true, queued: action, id, eta: "~2-5 min" });
 }
 
