@@ -21,7 +21,7 @@ Rank tracking · keyword research · competitor gaps · AI Overview visibility �
 
 SEO tools charge subscription prices for data they buy wholesale. Under the hood they're calling the same SERP APIs you can call yourself.
 
-SEO Command Center is the whole dashboard, self-hosted, on top of [DataForSEO](https://dataforseo.com)'s pay-as-you-go API. No subscription, no seat pricing, no keyword caps — you pay cents for the exact SERPs you pull:
+SEO Command Center is the whole dashboard, self-hosted, on top of [DataForSEO](https://dataforseo.com/?aff=254685)'s pay-as-you-go API. No subscription, no seat pricing, no keyword caps — you pay cents for the exact SERPs you pull:
 
 | | SEO Command Center | [Semrush Pro](https://www.semrush.com/pricing/) | [Ahrefs Lite](https://ahrefs.com/pricing) | [Local Falcon](https://www.localfalcon.com/pricing) |
 |---|---|---|---|---|
@@ -82,7 +82,7 @@ That's it. Python 3.9+ standard library only — no pip install, no Docker, no d
 | Requirement | For | Cost |
 |---|---|---|
 | Python 3.9+ | everything | free |
-| [DataForSEO account](https://dataforseo.com) | rankings, research, competitors, map grids | pay-as-you-go, ~$4/mo typical usage (prepaid credits last months) |
+| [DataForSEO account](https://dataforseo.com/?aff=254685) | rankings, research, competitors, map grids | pay-as-you-go, ~$4/mo typical usage (prepaid credits last months) |
 | Cloudflare account (optional) | hosted dashboard + in-browser buttons | free tier |
 | Google Search Console (optional) | impressions/clicks + found keywords | free |
 | Node.js (optional) | only for `worker.py deploy` (wrangler) | free |
@@ -150,6 +150,8 @@ Out of the box it carries the Tested Media logo. Set `BRAND_NAME` (and optionall
 
 **Why not just use rank tracker X?**
 If you're happy paying monthly SaaS pricing, do that. This is for people who want the whole stack, their own data, and a bill that rounds to a coffee.
+
+> DataForSEO links in this README are affiliate links — signing up through them supports the project at no cost to you. Plain link if you prefer: dataforseo.com
 
 ## Contributing
 

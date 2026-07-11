@@ -85,7 +85,7 @@ def main():
 
     # 2. DataForSEO (the only hard requirement)
     print("\nDataForSEO powers rankings, research, competitors and map grids.")
-    print("Sign up (pay-as-you-go, ~$0.60/week for 500 keywords): https://dataforseo.com")
+    print("Sign up (pay-as-you-go, ~$0.60/week for 500 keywords): https://dataforseo.com/?aff=254685")
     while True:
         login = ask("DataForSEO API login (usually your email)")
         password = ask("DataForSEO API password", secret=True)

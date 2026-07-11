@@ -49,7 +49,7 @@ def require(key, hint=""):
 
 def dfs_header():
     """Authorization header for DataForSEO."""
-    login = require("DATAFORSEO_LOGIN", "Sign up at https://dataforseo.com (pay-as-you-go).")
+    login = require("DATAFORSEO_LOGIN", "Sign up at https://dataforseo.com/?aff=254685 (pay-as-you-go).")
     password = require("DATAFORSEO_PASSWORD")
     return "Basic " + base64.b64encode(f"{login}:{password}".encode()).decode()
 
