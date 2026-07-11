@@ -54,16 +54,23 @@ def dfs_header():
     return "Basic " + base64.b64encode(f"{login}:{password}".encode()).decode()
 
 
+DEFAULT_BRAND = "Tested Media"  # made by tested.media — set BRAND_NAME in .env to rebrand
+DEFAULT_LOGO = REPO / "assets" / "testedmedia.svg"
+
+
 def brand_name():
-    return env("BRAND_NAME", "SEO Command Center")
+    return env("BRAND_NAME", DEFAULT_BRAND)
 
 
 def logo_html():
-    """Sidebar logo: custom SVG file if LOGO_FILE is set, else a text wordmark."""
+    """Sidebar logo. Priority: LOGO_FILE (your own SVG) → BRAND_NAME wordmark →
+    default Tested Media logo."""
     logo_file = env("LOGO_FILE")
     if logo_file and pathlib.Path(logo_file).expanduser().exists():
         return pathlib.Path(logo_file).expanduser().read_text()
     name = brand_name()
+    if name == DEFAULT_BRAND and DEFAULT_LOGO.exists():
+        return DEFAULT_LOGO.read_text()
     return ('<span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-weight:800;'
             'font-size:15px;letter-spacing:.4px;color:#fff">'
             + name.upper().replace(" ", "&thinsp;|&thinsp;", 1) + "</span>")

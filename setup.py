@@ -76,7 +76,9 @@ def main():
     env = {}
 
     # 1. branding + access key
-    env["BRAND_NAME"] = ask("Name shown in the dashboard header", "SEO Command Center")
+    brand = ask("Name shown in the dashboard header (enter = keep the Tested Media logo)", "Tested Media")
+    if brand != "Tested Media":
+        env["BRAND_NAME"] = brand
     print("\nThe access key is the password for your dashboard's login page.")
     env["ACCESS_KEY"] = ask("Access key", secrets.token_urlsafe(12))
     env["AUTH_SALT"] = secrets.token_hex(8)

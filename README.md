@@ -144,7 +144,7 @@ Yes — add any domain as a site, or use Research → "Steal from a competitor" 
 Unlimited. Cost scales with keywords, not sites.
 
 **White-label / client dashboards?**
-Set `BRAND_NAME` (and optionally `LOGO_FILE`) in `.env`, deploy per client. Each deployment has its own access key.
+Out of the box it carries the Tested Media logo. Set `BRAND_NAME` (and optionally `LOGO_FILE`) in `.env` to rebrand everything — sidebar, login page, titles. Deploy once per client, each with its own access key.
 
 **Why not just use rank tracker X?**
 If you're happy paying monthly SaaS pricing, do that. This is for people who want the whole stack, their own data, and a bill that rounds to a coffee.
@@ -160,5 +160,14 @@ PRs welcome. The codebase is intentionally boring: stdlib Python, one file per r
 ---
 
 <div align="center">
+
+<a href="https://tested.media"><picture>
+<source media="(prefers-color-scheme: dark)" srcset="docs/brand/testedmedia-white.svg">
+<img src="docs/brand/testedmedia-dark.svg" alt="Tested Media" width="190">
+</picture></a>
+
+Built and run in production at [Tested Media](https://tested.media) — every number in this README is from our own deployment.
+
 If this saved you $100+/month, a star helps other people find it.
+
 </div>
