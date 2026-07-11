@@ -61,7 +61,9 @@ def run_tool(name):
         raise SystemExit(f"unknown tool '{name}' — one of: {', '.join(TOOLS)}, all")
     for script, args in steps:
         print(f"→ {script} {' '.join(args)}", flush=True)
-        subprocess.run([sys.executable, str(REPO / "tracker" / script), *args], check=True)
+        r = subprocess.run([sys.executable, str(REPO / "tracker" / script), *args])
+        if r.returncode != 0:
+            raise SystemExit(r.returncode)  # the tool already printed why
 
 
 def render_all():
@@ -190,8 +192,8 @@ def loop():
                 for tool in dict.fromkeys(pending):
                     try:
                         run_tool(tool if tool in TOOLS else "rankings")
-                    except subprocess.CalledProcessError as e:
-                        print(f"  {tool} failed: {e}", flush=True)
+                    except SystemExit as e:
+                        print(f"  {tool} failed (exit {e.code})", flush=True)
                     _kv(cf, f"/values/last:{tool}", "PUT", f"{now:%F %T}".encode())
                     try:
                         _kv(cf, f"/values/req:{tool}", "DELETE")
