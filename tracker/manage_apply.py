@@ -13,7 +13,7 @@ Removals go to blocked_keywords so auto-discovery can't resurrect them.
 Geogrid ops queue a map-grid re-run themselves (req:map-grid) instead of a full re-track.
 """
 import config
-import json, pathlib, sys, urllib.request, urllib.parse
+import json, pathlib, sys, urllib.error, urllib.request, urllib.parse
 
 KEYWORDS = config.KEYWORDS
 CF = config.cloudflare()
@@ -33,6 +33,16 @@ def kv(path, method="GET", data=None):
 def main():
     if not API:
         return 0  # hosted mode not configured — nothing to poll
+    # mgmt-dirty flag gates the list call: KV free tier allows only 1,000 list
+    # ops/day. manage.js sets the flag on every queued op; deleting it BEFORE
+    # listing means an op queued mid-apply re-sets it for the next cycle.
+    try:
+        kv("/values/mgmt-dirty")
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return 0
+        raise
+    kv("/values/mgmt-dirty", method="DELETE")
     keys = [k["name"] for k in (kv("/keys?prefix=mgmt:").get("result") or [])]
     if not keys:
         return 0
@@ -137,7 +147,12 @@ def main():
             print(f"  applied: {a}")
         if geogrid_changed:
             # queue a map-grid re-run so the poller re-scans + redeploys the grid page
-            kv("/values/req:map-grid", method="PUT", data=b"queued-by-manage-apply")
+            try:
+                queue = kv("/values/queue")
+            except urllib.error.HTTPError:
+                queue = {}
+            queue["map-grid"] = "queued-by-manage-apply"
+            kv("/values/queue", method="PUT", data=json.dumps(queue).encode())
         if any(not x.startswith(("set_geogrid", "add_geogrid", "remove_geogrid")) for x in applied):
             return 10
     return 0

@@ -18,13 +18,17 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: `daily limit reached (${DAILY_LIMIT}/day per tool)`, used, limit: DAILY_LIMIT }, 429);
   }
   await kv.put(countKey, String(used + 1), { expirationTtl: 172800 });
-  await kv.put("req:" + tool, String(Date.now()));
+  // single "queue" key ({tool: ts}) — the worker polls it every cycle, so one
+  // read per cycle instead of a kv.list (free tier caps list ops at 1,000/day)
+  const queue = JSON.parse((await kv.get("queue")) || "{}");
+  queue[tool] = Date.now();
+  await kv.put("queue", JSON.stringify(queue));
   return json({ ok: true, queued: tool, used: used + 1, limit: DAILY_LIMIT });
 }
 
 export async function onRequestGet(context) {
   const kv = context.env.REFRESH_KV;
-  const pending = (await kv.list({ prefix: "req:" })).keys.map(k => k.name.slice(4));
+  const pending = Object.keys(JSON.parse((await kv.get("queue")) || "{}"));
   const last = {};
   for (const t of TOOLS) {
     const v = await kv.get("last:" + t);

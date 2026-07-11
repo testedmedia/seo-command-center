@@ -179,9 +179,13 @@ def loop():
             pending = []
             if r.returncode == 10:
                 pending.append("rankings")
-            # 2. requested refreshes
-            keys = _kv(cf, "/keys?prefix=req:").get("result") or []
-            pending += [k["name"][4:] for k in keys]
+            # 2. requested refreshes — single "queue" key, not /keys?prefix=
+            # (KV free tier caps list ops at 1,000/day; reads at 100,000/day)
+            try:
+                queued = _kv(cf, "/values/queue")
+            except urllib.error.HTTPError:
+                queued = {}
+            pending += list(queued)
             # 3. daily refresh
             now = datetime.datetime.now()
             if now.hour == run_hour and last_daily != now.date():
@@ -195,10 +199,14 @@ def loop():
                     except SystemExit as e:
                         print(f"  {tool} failed (exit {e.code})", flush=True)
                     _kv(cf, f"/values/last:{tool}", "PUT", f"{now:%F %T}".encode())
-                    try:
-                        _kv(cf, f"/values/req:{tool}", "DELETE")
-                    except urllib.error.HTTPError:
-                        pass
+                # clear processed tools from the queue, keeping any queued mid-run
+                try:
+                    q = _kv(cf, "/values/queue")
+                except urllib.error.HTTPError:
+                    q = {}
+                for tool in pending:
+                    q.pop(tool, None)
+                _kv(cf, "/values/queue", "PUT", json.dumps(q).encode())
                 render_all()
                 deploy()
         except Exception as e:
