@@ -13,7 +13,7 @@ Rank tracking · keyword research · competitor gaps · AI Overview visibility �
 [![Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff7a2e.svg)](#contributing)
 
-<img src="docs/screenshots/rankings.png" alt="Rankings dashboard" width="900">
+<img src="docs/demo.gif" alt="SEO Command Center demo" width="900">
 
 </div>
 
@@ -47,6 +47,8 @@ Seven pages, one dark command center, everything driven from the browser:
 | **Map Grid** | LocalFalcon-style GPS grid: your Google map-pack rank from 49+ points around your city, plus who holds the top 3 at every pin |
 
 <div align="center">
+<img src="docs/screenshots/rankings.png" alt="Rankings dashboard" width="900">
+<br><br>
 <img src="docs/screenshots/map-grid.png" alt="Local map grid" width="900">
 <br><br>
 <img src="docs/screenshots/research.png" alt="Keyword research" width="900">
