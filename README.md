@@ -44,7 +44,7 @@ Seven pages, one dark command center, everything driven from the browser:
 | **AI Visibility** | Which of your keywords trigger Google AI Overviews, whether you're cited, and who is |
 | **Site Health** | Zero-cost technical crawler: broken links, duplicate titles, missing metas, thin content, per-site score |
 | **Link Gap** | Domains linking to your rivals but not you, junk-filtered and classified by how to actually get the link |
-| **Map Grid** | LocalFalcon-style GPS grid: your Google map-pack rank from 49+ points around your city, plus who holds the top 3 at every pin |
+| **Map Grid** | LocalFalcon-style GPS grid: your Google map-pack rank from 49+ points around your city, who holds the top 3 at every pin, per-keyword history charts and run-over-run improvement deltas |
 
 <div align="center">
 <img src="docs/screenshots/rankings.png" alt="Rankings dashboard" width="900">

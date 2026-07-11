@@ -167,6 +167,12 @@ EXTRA_CSS = """
 .kpi{background:var(--card);padding:14px 18px}
 .kpi .v{font-family:'Plus Jakarta Sans';font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
 .kpi .k{color:var(--mut);font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.kd{font-size:11.5px;margin-left:8px;font-weight:700;vertical-align:3px}
+.kd.up{color:var(--up)}.kd.down{color:var(--down)}.kd.flat{color:var(--mut)}
+.ghist{padding:12px 18px 8px;border-top:1px solid var(--line)}
+.glbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--mut);margin-bottom:6px;display:flex;gap:16px;align-items:center}
+.glbl .dot{width:9px;height:9px;border-radius:2px;margin-right:5px}
+.gempty{color:var(--mut);font-size:12px;padding:8px 0 14px}
 .map{height:520px;width:100%;background:#0a0a0e}
 .leaflet-container{background:#0a0a0e}
 .tilepane{filter:none}
@@ -235,6 +241,47 @@ function pinColor(r){ if(r===null||r===undefined) return '#ff5c5c'; if(r<=3) ret
 function pinText(r){ return (r===null||r===undefined) ? '\\u2014' : String(r); }
 function commas(n){ return n.toLocaleString('en-US'); }
 
+function runStats(pts){
+  var sum=0,ranked=0,t3=0,t10=0;
+  pts.forEach(function(p){var r=p.rank; if(r!==null&&r!==undefined){sum+=r;ranked++;if(r<=3)t3++;if(r<=10)t10++;}});
+  var n=pts.length||1;
+  return {avg: ranked? sum/ranked : null, t3: t3/n*100, t10: t10/n*100, n: pts.length};
+}
+function setKd(card, sel, diff, fmt){
+  var el=card.querySelector(sel); if(!el) return;
+  el.classList.remove('up','down');
+  if(diff===null||diff===undefined||Math.abs(diff)<0.05){ el.textContent=''; return; }
+  var up=diff>0;  // positive = improvement (caller orients the sign)
+  el.textContent=(up?'▲':'▼')+fmt(Math.abs(diff));
+  el.classList.add(up?'up':'down');
+}
+function renderTrend(card, runsMap){
+  var runs=Object.keys(runsMap).sort();
+  var st=runs.map(function(r){var s=runStats(runsMap[r]); s.run=r; return s;});
+  var el=card.querySelector('.gsvg'); if(!el) return;
+  if(st.length<2){ el.innerHTML='<div class="gempty">Trend chart appears after the next scan ('+st.length+' run stored so far). Every scan is kept forever.</div>'; return; }
+  var W=640,H=120,P=26;
+  var maxAvg=Math.max.apply(null,st.map(function(s){return s.avg===null?20:s.avg;}).concat([10]));
+  function x(i){return P + i*(W-2*P)/(st.length-1);}
+  function yAvg(v){return P + (v-1)/(maxAvg-1)*(H-2*P);}
+  function yPct(v){return (H-P) - v/100*(H-2*P);}
+  var avgLine=st.map(function(s,i){return x(i)+','+yAvg(s.avg===null?maxAvg:s.avg);}).join(' ');
+  var t3Line=st.map(function(s,i){return x(i)+','+yPct(s.t3);}).join(' ');
+  var dots='';
+  st.forEach(function(s,i){
+    dots+='<circle cx="'+x(i)+'" cy="'+yAvg(s.avg===null?maxAvg:s.avg)+'" r="3.5" fill="#ff7a2e"><title>'+s.run+' — avg rank '+(s.avg===null?'not in pack':s.avg.toFixed(1))+'</title></circle>';
+    dots+='<circle cx="'+x(i)+'" cy="'+yPct(s.t3)+'" r="3.5" fill="#39d98a"><title>'+s.run+' — top 3: '+Math.round(s.t3)+'% of pins</title></circle>';
+  });
+  var labels='';
+  var step=Math.max(1,Math.ceil(st.length/6));
+  st.forEach(function(s,i){ if(i%step===0||i===st.length-1){ labels+='<text x="'+x(i)+'" y="'+(H-4)+'" fill="#76767f" font-size="9.5" text-anchor="middle">'+s.run.slice(5,10)+'</text>'; }});
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:'+H+'px;display:block" preserveAspectRatio="xMidYMid meet">'
+    +'<line x1="'+P+'" y1="'+(H-P)+'" x2="'+(W-P)+'" y2="'+(H-P)+'" stroke="rgba(255,255,255,.13)"/>'
+    +'<polyline points="'+t3Line+'" fill="none" stroke="#39d98a" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"/>'
+    +'<polyline points="'+avgLine+'" fill="none" stroke="#ff7a2e" stroke-width="2.5" stroke-linejoin="round"/>'
+    +dots+labels+'</svg>';
+}
+
 var maps = {};  // brandKey -> {map, layer}
 function buildBrand(brand){
   var kws = Object.keys(DATA[brand]);
@@ -249,10 +296,11 @@ function buildBrand(brand){
     +'<div class="bar"><span class="lbl">Keyword</span><span class="kwchips"></span>'
     +'<span class="runsel"><label class="cmp"><input type="checkbox" class="cmpbox"> vs prev</label>'
     +'<button class="prev">\\u2039</button><span class="rlabel"></span><button class="next">\\u203a</button></span></div>'
-    +'<div class="kpis"><div class="kpi"><div class="v vAvg">—</div><div class="k">Avg map rank</div></div>'
-    +'<div class="kpi"><div class="v vT3">—</div><div class="k">% pins in top 3</div></div>'
-    +'<div class="kpi"><div class="v vT10">—</div><div class="k">% pins in top 10</div></div>'
+    +'<div class="kpis"><div class="kpi"><div class="v vAvg">—<span class="kd kdAvg"></span></div><div class="k">Avg map rank</div></div>'
+    +'<div class="kpi"><div class="v vT3">—<span class="kd kdT3"></span></div><div class="k">% pins in top 3</div></div>'
+    +'<div class="kpi"><div class="v vT10">—<span class="kd kdT10"></span></div><div class="k">% pins in top 10</div></div>'
     +'<div class="kpi"><div class="v vCov">—</div><div class="k">Grid points</div></div></div>'
+    +'<div class="ghist"><div class="glbl">History<span><i class="dot" style="background:#ff7a2e;display:inline-block"></i>avg rank (lower = better)</span><span><i class="dot" style="background:#39d98a;display:inline-block"></i>% pins in top 3</span></div><div class="gsvg"></div></div>'
     +'<div class="map" id="map_'+key+'"></div>';
   document.getElementById('mount').appendChild(card);
 
@@ -319,10 +367,17 @@ function buildBrand(brand){
       L.marker([p.lat,p.lng],{icon:icon}).addTo(layer).bindPopup(pop);
     });
     var n=pts.length;
-    card.querySelector('.vAvg').textContent = ranked?(sum/ranked).toFixed(1):'—';
-    card.querySelector('.vT3').textContent = n?Math.round(t3/n*100)+'%':'—';
-    card.querySelector('.vT10').textContent = n?Math.round(t10/n*100)+'%':'—';
+    card.querySelector('.vAvg').childNodes[0].textContent = ranked?(sum/ranked).toFixed(1):'—';
+    card.querySelector('.vT3').childNodes[0].textContent = n?Math.round(t3/n*100)+'%':'—';
+    card.querySelector('.vT10').childNodes[0].textContent = n?Math.round(t10/n*100)+'%':'—';
     card.querySelector('.vCov').textContent = commas(n);
+    // improvement vs the previous run: for rank, lower is better; for %, higher is better
+    var ps = prevPts ? runStats(prevPts) : null;
+    var curAvg = ranked? sum/ranked : null;
+    setKd(card, '.kdAvg', (ps && ps.avg!==null && curAvg!==null) ? ps.avg-curAvg : null, function(d){return d.toFixed(1);});
+    setKd(card, '.kdT3',  ps && n ? (t3/n*100)-ps.t3 : null, function(d){return Math.round(d)+'pp';});
+    setKd(card, '.kdT10', ps && n ? (t10/n*100)-ps.t10 : null, function(d){return Math.round(d)+'pp';});
+    renderTrend(card, runsMap);
     var d=new Date(run.replace(' ','T'));
     card.querySelector('.rlabel').textContent = run+'  (run '+(runs.length-state.runIdx)+'/'+runs.length+')';
     card.querySelector('.prev').disabled = state.runIdx>=runs.length-1;
