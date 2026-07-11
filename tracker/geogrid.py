@@ -91,7 +91,7 @@ def brand_rank_at(header, keyword, lat, lng, zoom, domain, brand_name):
 
 def track():
     header = dfs_header()
-    cfg = json.loads(KEYWORDS.read_text())
+    cfg = json.loads(config.KEYWORDS.read_text())
     con = init_db()
     checked_at = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     total = 0.0
@@ -144,6 +144,17 @@ def _load_runs():
                 pass
         data.setdefault(brand, {}).setdefault(kw, {}).setdefault(ca, []).append(pt)
     con.close()
+    # include configured keywords that have NO scan yet, so a just-added keyword
+    # shows its chip immediately (with a "scan in progress" state) instead of vanishing
+    try:
+        cfg = json.loads(config.KEYWORDS.read_text())
+        for brand, meta in cfg["brands"].items():
+            gg = meta.get("geogrid")
+            if gg:
+                for kw in gg.get("keywords", []):
+                    data.setdefault(brand, {}).setdefault(kw, {})
+    except Exception:
+        pass
     return data
 
 
@@ -191,7 +202,7 @@ def render():
     data = _load_runs()
     logo = config.logo_html()
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-    cfg = json.loads(KEYWORDS.read_text())
+    cfg = json.loads(config.KEYWORDS.read_text())
     centers = {b: (m.get("geogrid") or {}).get("center")
                for b, m in cfg["brands"].items() if m.get("geogrid")}
     brand_cfg = {b: (m.get("geogrid") or None) for b, m in cfg["brands"].items()}
@@ -335,7 +346,18 @@ function buildBrand(brand){
     var runsMap=DATA[brand][state.kw]||{};
     var runs=Object.keys(runsMap).sort();       // oldest..newest
     runs.reverse();                              // newest first -> idx 0 = latest
-    if(!runs.length){ layer.clearLayers(); return; }
+    if(!runs.length){
+      layer.clearLayers();
+      card.querySelector('.vAvg').childNodes[0].textContent='—';
+      card.querySelector('.vT3').childNodes[0].textContent='—';
+      card.querySelector('.vT10').childNodes[0].textContent='—';
+      card.querySelector('.vCov').textContent='—';
+      ['.kdAvg','.kdT3','.kdT10'].forEach(function(s){var e=card.querySelector(s);if(e){e.textContent='';e.classList.remove('up','down');}});
+      card.querySelector('.rlabel').textContent='first scan in progress…';
+      card.querySelector('.prev').disabled=true; card.querySelector('.next').disabled=true;
+      var g=card.querySelector('.gsvg'); if(g) g.innerHTML='<div class="gempty">"'+state.kw+'" was just added. Its first grid scan is running now — pins and history appear here within a few minutes (the page auto-refreshes).</div>';
+      return;
+    }
     if(state.runIdx>runs.length-1) state.runIdx=runs.length-1;
     var run=runs[state.runIdx];
     var pts=runsMap[run];
