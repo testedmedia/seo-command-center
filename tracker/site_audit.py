@@ -28,7 +28,7 @@ OUT_JSON = config.DATA / "site-health.json"
 OUT_HTML = config.DATA / "site-health.html"
 PAGE_CAP = 150
 LINK_SAMPLE_CAP = 250
-UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36 JarvisSEOAudit/1.0"
+UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Safari/537.36 SEOCommandCenter/1.0"
 
 
 def fetch(url, timeout=20):
