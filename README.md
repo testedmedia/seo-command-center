@@ -12,6 +12,7 @@ Rank tracking · keyword research · competitor gaps · AI Overview visibility �
 [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org)
 [![Dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](#)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-ff7a2e.svg)](#contributing)
+[![GitHub stars](https://img.shields.io/github/stars/testedmedia/seo-command-center?style=social)](https://github.com/testedmedia/seo-command-center/stargazers)
 
 <img src="docs/demo.gif" alt="SEO Command Center demo" width="900">
 
@@ -150,6 +151,16 @@ Out of the box it carries the Tested Media logo. Set `BRAND_NAME` (and optionall
 
 **Why not just use rank tracker X?**
 If you're happy paying monthly SaaS pricing, do that. This is for people who want the whole stack, their own data, and a bill that rounds to a coffee.
+
+## Roadmap
+
+- Optional docker-compose for people who prefer containers (the no-Docker default stays)
+- Multiple Google Search Console properties per install
+- Scheduled email digests for rank changes
+- Deeper AI Overview tracking: which domains get cited, not just presence
+- CSV export on every report
+
+Vote or suggest in [Discussions](https://github.com/testedmedia/seo-command-center/discussions).
 
 ## Contributing
 
