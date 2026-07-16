@@ -26,6 +26,7 @@ KEYWORDS = config.KEYWORDS
 _ICONS = {
     "rankings": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
     "research": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>',
+    "explorer": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M21 3l-9 9"/><path d="M15 3h6v6"/></svg>',
     "competitors": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>',
     "ai-visibility": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 15l.9 2.4L22 18.3l-2.1.9L19 21.6l-.9-2.4-2.1-.9 2.1-.9z"/></svg>',
     "site-health": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg>',
@@ -37,6 +38,7 @@ _GLOBE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
 _REPORTS = [
     ("rankings", "/", "Rankings", "keywords &amp; positions"),
     ("research", "/research", "Research", "keyword ideas"),
+    ("explorer", "/explorer", "Site Explorer", "analyze any domain"),
     ("competitors", "/competitors", "Competitors", "keyword gap"),
     ("ai-visibility", "/ai-visibility", "AI Visibility", "AI Overview citations"),
     ("site-health", "/site-health", "Site Health", "technical audit"),

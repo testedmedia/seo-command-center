@@ -35,12 +35,13 @@ SEO Command Center is the whole dashboard, self-hosted, on top of [DataForSEO](h
 
 ## What you get
 
-Seven pages, one dark command center, everything driven from the browser:
+Eight pages, one dark command center, everything driven from the browser:
 
 | Page | What it does |
 |---|---|
 | **Rankings** | Daily positions, 1d/7d/30d deltas, best-ever, sparklines, history charts, visibility score, GSC impressions/clicks, mobile ranks, CSV export |
 | **Research** | Live keyword ideas from seeds or any competitor's domain — volume, CPC, competition — checkbox → tracked |
+| **Site Explorer** | Ahrefs-style analysis of ANY domain or single URL: DR, traffic + traffic value, history charts, backlinks (dofollow/new/broken), anchors, referring domains, best-by-links, broken-page link opportunities, competitors, content gap vs your brands, paid keywords, site structure. A full all-tabs run costs about $0.20 in DataForSEO credits; results cache 24h so re-checks are free |
 | **Competitors** | Who actually outranks you + every keyword they rank for that you don't |
 | **AI Visibility** | Which of your keywords trigger Google AI Overviews, whether you're cited, and who is |
 | **Site Health** | Zero-cost technical crawler: broken links, duplicate titles, missing metas, thin content, per-site score |

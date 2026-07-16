@@ -38,6 +38,7 @@ TOOLS = {
     "rankings": [("rank_tracker.py", ["both", "--skip-geo"]), ("alerts.py", [])],
     "rankings-full": [("rank_tracker.py", ["both"]), ("alerts.py", [])],
     "research-page": [("research_page.py", [])],
+    "explorer-page": [("explorer_page.py", [])],
     "competitors": [("competitor_gap.py", [])],
     "ai-visibility": [("ai_visibility.py", [])],
     "site-health": [("site_audit.py", [])],
@@ -47,6 +48,7 @@ TOOLS = {
 PAGES = {  # rendered file -> site path
     "dashboard.html": "index.html",
     "research.html": "research.html",
+    "explorer.html": "explorer.html",
     "competitors.html": "competitors.html",
     "ai-visibility.html": "ai-visibility.html",
     "site-health.html": "site-health.html",
@@ -68,6 +70,7 @@ def run_tool(name):
 
 def render_all():
     for script, args in [("rank_tracker.py", ["render"]), ("research_page.py", []),
+                         ("explorer_page.py", []),
                          ("competitor_gap.py", ["render"]), ("ai_visibility.py", ["render"]),
                          ("site_audit.py", ["render"]), ("link_gap.py", ["render"]),
                          ("geogrid.py", ["render"])]:
